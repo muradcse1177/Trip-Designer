@@ -34,7 +34,7 @@ class airTicketController extends Controller
             $rows5 = DB::table('air_ticket_invoice')
                 ->where('deleted',0)
                 ->where('agent_id',Session::get('user_id'))
-                ->orderBy('updated_at','desc')
+                ->orderBy('id','desc')
                 ->get();
             $rows6 = DB::table('payment_type')
                 ->get();
@@ -659,6 +659,53 @@ class airTicketController extends Controller
             else{
                 return back()->with('errorMessage', 'Please fill up the form!!');
             }
+        }
+        catch(\Illuminate\Database\QueryException $ex){
+            return back()->with('errorMessage', $ex->getMessage());
+        }
+    }
+    public function filterAirTicket(Request $request){
+        try{
+            $rows = DB::table('vendors')
+                ->where('agent_id',Session::get('user_id'))
+                ->where('deleted',0)
+                ->get();
+            $rows1 = DB::table('employees')
+                ->where('agent_id',Session::get('user_id'))
+                ->where('deleted',0)
+                ->get();
+            $rows2 = DB::table('passengers')
+                ->where('deleted',0)
+                ->where('upload_by',Session::get('user_id'))
+                ->orderBy('id','desc')
+                ->get();
+            $rows3 = DB::table('airport_details')
+                ->get();
+            $rows4 = DB::table('airlines_details')
+                ->get();
+            $rows5 = DB::table('air_ticket_invoice')
+                ->where('deleted',0)
+                ->where('agent_id',Session::get('user_id'))
+                ->orderBy('id','desc')
+                ->get();
+            $rows5 = DB::table('air_ticket_invoice')
+                ->where('deleted',0)
+                ->where('agent_id',Session::get('user_id'))
+                ->where(function ($query) use($request) {
+                    if($request->from_issue_date  != '' and  $request->to_issue_date  != '')
+                        $query->whereBetween('issue_date', [$request->from_issue_date, $request->to_issue_date]);
+                    if($request->c_status  != '' )
+                        $query->where('status', '=', $request->c_status);
+                    if($request->p_status  == '1' )
+                        $query->where('due_amount', '=<', 0);
+                    if($request->p_status  == '2' )
+                        $query->where('due_amount', '>', 0);
+                    })
+                ->orderBy('id','desc')
+                ->get();
+            $rows6 = DB::table('payment_type')
+                ->get();
+            return view('airTicket.newAirTicket',['vendors' => $rows,'employees' => $rows1,'passengers' => $rows2,'airports' => $rows3,'airlines' => $rows4,'tickets' => $rows5,'payment_types' => $rows6]);
         }
         catch(\Illuminate\Database\QueryException $ex){
             return back()->with('errorMessage', $ex->getMessage());

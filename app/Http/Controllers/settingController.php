@@ -305,4 +305,52 @@ class settingController extends Controller
             return back()->with('errorMessage', $ex->getMessage());
         }
     }
+    public function airports(Request $request){
+        try{
+            return view('settings.airports');
+        }
+        catch(\Illuminate\Database\QueryException $ex){
+            return back()->with('errorMessage', $ex->getMessage());
+        }
+    }
+    public function insertAirports(Request $request){
+        try{
+            $result = DB::table('airlines_details')->insert([
+                'name' => $request->name,
+                'code' => $request->code,
+            ]);
+            if ($result) {
+                return redirect()->to('airports')->with('successMessage', 'New airports added successfully!!');
+            } else {
+                return back()->with('errorMessage', 'Please try again!!');
+            }
+        }
+        catch(\Illuminate\Database\QueryException $ex){
+            return back()->with('errorMessage', $ex->getMessage());
+        }
+    }
+    public function airlines(Request $request){
+        try{
+            return view('settings.airlines');
+        }
+        catch(\Illuminate\Database\QueryException $ex){
+            return back()->with('errorMessage', $ex->getMessage());
+        }
+    }
+    public function insertAirlines(Request $request){
+        try{
+            $result = DB::table('airlines_details')->insert([
+                'name' => $request->name,
+                'code' => $request->code,
+            ]);
+            if ($result) {
+                return redirect()->to('airlines')->with('successMessage', 'New Airlines added successfully!!');
+            } else {
+                return back()->with('errorMessage', 'Please try again!!');
+            }
+        }
+        catch(\Illuminate\Database\QueryException $ex){
+            return back()->with('errorMessage', $ex->getMessage());
+        }
+    }
 }

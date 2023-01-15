@@ -258,6 +258,18 @@
                                 <p>Employee Settings</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{url('airlines')}}" class="nav-link  @yield('airlines')">
+                                <i class="far fa-arrow-alt-circle-right nav-icon"></i>
+                                <p>Airlines Settings</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{url('airports')}}" class="nav-link  @yield('airports')">
+                                <i class="far fa-arrow-alt-circle-right nav-icon"></i>
+                                <p>Airport Settings</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item  @yield('websiteMenu')">

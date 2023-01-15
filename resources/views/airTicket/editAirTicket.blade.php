@@ -128,75 +128,90 @@
                                             <label style="margin-left: 5px;">Flight Details</label>
                                         </div>
                                     </div>
-                                    <div class="row after-add-more" style="margin-left: 5px;">
-                                        <div class="col-sm-3">
-                                            <div class="form-group">
-                                                <label>From</label>
-                                                <select class="form-control select2bs4" name="a_from[]" id="from" style="width: 100%;" required>
-                                                    <option value="">Select From</option>
-                                                    @foreach($airports as $airport)
-                                                        <option value="{{$airport->name.'('.$airport->iata_codes.')'}}">{{$airport->name.'('.$airport->iata_codes.')'}}</option>
-                                                    @endforeach
-                                                </select>
+                                    @php
+                                        $f_numbers_count = count(json_decode($tickets->f_number));
+                                        $f_numbers = json_decode($tickets->f_number);
+                                        $a_time = json_decode($tickets->a_time);
+                                        $d_time = json_decode($tickets->d_time);
+                                        $airl = json_decode($tickets->airlines);
+                                        $af = json_decode($tickets->a_from);
+                                        $at = json_decode($tickets->a_to);
+                                    @endphp
+                                    @for($i =0; $i<$f_numbers_count; $i++)
+                                        <div class="row after-add-more" style="margin-left: 5px;">
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>From</label>
+                                                    <select class="form-control select2bs4" name="a_from[]" id="from" style="width: 100%;" required>
+                                                        <option value="">Select From</option>
+                                                        @foreach($airports as $airport)
+                                                            @php
+                                                                $ap_val = $airport->name.'('.$airport->iata_codes.')';
+                                                            @endphp
+                                                            <option value="{{$ap_val}}" @if($ap_val == $af[$i]) Selected @endif>{{$ap_val}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="form-group">
-                                                <label>To</label>
-                                                <select class="form-control select2bs4" name="a_to[]" id="to" style="width: 100%;" required>
-                                                    <option value="">Select To</option>
-                                                    @foreach($airports as $airport)
-                                                        <option value="{{$airport->name.'('.$airport->iata_codes.')'}}">{{$airport->name.'('.$airport->iata_codes.')'}}</option>
-                                                    @endforeach
-                                                </select>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>To</label>
+                                                    <select class="form-control select2bs4" name="a_to[]" id="to" style="width: 100%;" required>
+                                                        <option value="">Select To</option>
+                                                        @foreach($airports as $airport)
+                                                            @php
+                                                                $ap_val = $airport->name.'('.$airport->iata_codes.')';
+                                                            @endphp
+                                                            <option value="{{$ap_val}}" @if($ap_val == $at[$i]) Selected @endif>{{$ap_val}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="form-group">
-                                                <label>Departure</label>
-                                                <div class="input-group date" id="d_time1" data-target-input="nearest">
-                                                    <input type="text" class="form-control datetimepicker-input" data-target="#d_time1" name="d_time[]" placeholder="26-09-2027 3:15 PM" required/>
-                                                    <div class="input-group-append" data-target="#d_time1" data-toggle="datetimepicker">
-                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Departure</label>
+                                                    <div class="input-group date" id="d_time1" data-target-input="nearest">
+                                                        <input type="text" class="form-control datetimepicker-input" data-target="#d_time1" name="d_time[]" placeholder="26-09-2027 3:15 " value="{{@$a_time[$i]}}" required/>
+                                                        <div class="input-group-append" data-target="#d_time1" data-toggle="datetimepicker">
+                                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="form-group">
-                                                <label>Arrival</label>
-                                                <div class="input-group date" id="a_time1" data-target-input="nearest">
-                                                    <input type="text" class="form-control datetimepicker-input" data-target="#a_time1" name="a_time[]" placeholder="26-09-2027 3:15 PM" required/>
-                                                    <div class="input-group-append" data-target="#a_time1" data-toggle="datetimepicker">
-                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Arrival</label>
+                                                    <div class="input-group date" id="a_time1" data-target-input="nearest">
+                                                        <input type="text" class="form-control datetimepicker-input" data-target="#a_time1" name="a_time[]" placeholder="26-09-2027 3:15" value="{{@$d_time[$i]}}" required/>
+                                                        <div class="input-group-append" data-target="#a_time1" data-toggle="datetimepicker">
+                                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="form-group">
-                                                <label>Flight Number</label>
-                                                <input type="text" class="form-control" id="f_number" name="f_number[]" placeholder="Enter Flight Number" required>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Flight Number</label>
+                                                    <input type="text" class="form-control" id="f_number" name="f_number[]" placeholder="Enter Flight Number" value="{{@$f_numbers[$i]}}" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Airlines</label>
+                                                    <select class="form-control select2bs4" name="airlines[]" id="airline" style="width: 100%;" required>
+                                                        <option value="">Select Airlines</option>
+                                                        @foreach($airlines as $airline)
+                                                            @php
+                                                                $a_val = $airline->name.'('.$airline->code.')';
+                                                            @endphp
+                                                            <option value="{{$a_val}}" @if($a_val == $airl[$i]) Selected @endif>{{$a_val}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-3">
-                                            <div class="form-group">
-                                                <label>Airlines</label>
-                                                <select class="form-control select2bs4" name="airlines[]" id="airline" style="width: 100%;" required>
-                                                    <option value="">Select Airlines</option>
-                                                    @foreach($airlines as $airline)
-                                                        <option value="{{$airline->name.'('.$airline->code.')'}}">{{$airline->name.'('.$airline->code.')'}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <label></label>
-                                            <div class="form-group" style="margin-top: 8px;">
-                                                <button type="button" class="btn btn-info btn-block add_more" id="ad_more" value="1">Add More Flight</button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    @endfor
+
                                     @endif
                                     @if(@$_GET['reissue']==1)
                                         @php
@@ -209,23 +224,6 @@
                                     <div class="col-sm-12">
                                         <div class="form-group" style="background: #e7e7e1;">
                                             <label style="margin-left: 5px;">Passenger Details</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12 newPassenger" style="margin-left: 0px;">
-                                        <div class="col-sm-3">
-                                            <div class="form-group">
-                                                <label>Passenger Number</label>
-                                                <select class="form-control select2bs4" name="pax_number" id="pax_number" style="width: 100%;" required>
-                                                    <option value="">Select From</option>
-                                                    <option value="1">One</option>
-                                                    <option value="2">Two</option>
-                                                    <option value="3">Three</option>
-                                                    <option value="4">Four</option>
-                                                    <option value="5">Five</option>
-                                                    <option value="6">Six</option>
-                                                    <option value="7">Seven</option>
-                                                </select>
-                                            </div>
                                         </div>
                                     </div>
                                     @endif
@@ -269,7 +267,7 @@
                                             <select class="form-control select2bs4" name="payment_type" id="payment_type" style="width: 100%;" required>
                                                 <option value="">Select Payment Type</option>
                                                 @foreach($payment_types as $payment_type)
-                                                    <option value="{{$payment_type->type}}"  @if($tickets->payment_type == $payment_type->type) Selected @endif>{{$tickets->payment_type}}</option>
+                                                    <option value="{{$payment_type->type}}"  @if($tickets->payment_type == $payment_type->type) Selected @endif>{{$payment_type->type}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -320,99 +318,12 @@
             $('.id').val(id);
         });
         $('#dob').datetimepicker({
-            format: 'YYYY-DD-MM HH:mm:ss',
+            format: 'YYYY-MM-DD HH:mm',
             icons: { time: 'far fa-clock' }
         });
         $('#d_time1,#a_time1').datetimepicker({
-            format: 'YYYY-DD-MM HH:mm:ss',
+            format: 'YYYY-MM-DD HH:mm',
             icons: { time: 'far fa-clock' }
-        });
-        $('#pax_number').on('change', function() {
-            var pax_value = this.value;
-            $('.feedback').remove();
-            var html= '<div class="row feedback">';
-            for(var i=0; i<pax_value; i++){
-                var pax_name = 'pax_name'+i;
-                html += '<div class="col-md-4"> <div class="form-group"> <label>Passengers</label> <select class="form-control select2bs4" name="pax_name[]" id="'+pax_name+'" style="width: 100%;" required> <option value="">Select Passenger Name</option>';
-                <?php
-                    foreach($passengers as $passenger)
-                    {
-                    ?>
-                    html += '<option value="<?php echo $passenger->id; ?>"><?php echo $passenger->f_name." ".$passenger->l_name; ?></option>';
-                <?php
-                    }
-                    ?>
-                    html += '</select></div></div>';
-                html += '<div class="col-sm-4"> <div class="form-group"> <label>Ticket Number</label> <input type="text" class="form-control" id="t_number" name="t_number[]" placeholder="Enter Ticket Number" required> </div> </div>'
-                html += '<div class="col-sm-4"> <div class="form-group"> <label>Luggage</label> <input type="number" class="form-control" id="luggage" name="luggage[]" placeholder="Enter Luggage" required> </div> </div>'
-            }
-            html += '</div>';
-
-            $('.newPassenger').append(html);
-            $('.select2bs4').select2({
-                theme: 'bootstrap4',
-            });
-        });
-
-        $("body").on("click",".add_more",function(){
-            var val = $('#ad_more').val();
-            val = parseInt(val) + 1;
-            $('#ad_more').val(val)
-            var from = 'from' + val.toString();
-            var to = 'to' + val.toString();
-            var d_time  = 'd_time' + val.toString();
-            var a_time = 'a_time'  + val.toString();
-            var airline = 'airline'  + val.toString();
-            var html = '';
-            html += '<div class="row" id="inputFormRow" style="margin-left: 5px;">';
-            html += '<div class="col-sm-3"> <div class="form-group"> <label>From</label>';
-            html += '<select class="form-control select2bs4" name="a_from[]" id="'+from+'"  style="width: 100%;" required> <option value="">Select From</option>';
-            <?php
-                foreach($airports as $airport1)
-                {
-                ?>
-                html += "<option value='<?php echo  $airport1->name."(".$airport1->iata_codes.")"; ?>'><?php echo $airport1->name."(".$airport1->iata_codes.")"; ?></option>";
-            <?php
-                }
-                ?>
-                html += '</select></div></div>';
-            html += '<div class="col-sm-3"><div class="form-group"> <label>To</label> <select class="form-control select2bs4" name="a_to[]" id="'+to+'" style="width: 100%;" required> <option value="">Select To</option>';
-            <?php
-                foreach($airports as $airport2)
-                {
-                ?>
-                html += "<option value='<?php echo $airport2->name."(".$airport2->iata_codes.")"; ?>'><?php echo $airport2->name."(".$airport2->iata_codes.")" ; ?></option>";
-            <?php
-                }
-                ?>
-                html += '</select></div></div>';
-            html += '<div class="col-sm-3"><div class="form-group"><label>Departure</label> <div class="input-group date" id="'+d_time+'" data-target-input="nearest"> <input type="text" class="form-control datetimepicker-input" data-target="#'+d_time+'" name="d_time[]" placeholder="26-09-2027 3:15 PM" required/> <div class="input-group-append" data-target="#'+d_time+'" data-toggle="datetimepicker"> <div class="input-group-text"><i class="fa fa-calendar"></i></div> </div> </div></div> </div>';
-            html += '<div class="col-sm-3"> <div class="form-group"> <label>Arrival</label> <div class="input-group date" id="'+a_time+'" data-target-input="nearest"> <input type="text" class="form-control datetimepicker-input" data-target="#'+a_time+'" name="a_time[]" placeholder="26-09-2027 3:15 PM" required/> <div class="input-group-append" data-target="#'+a_time+'" data-toggle="datetimepicker"> <div class="input-group-text"><i class="fa fa-calendar"></i></div> </div> </div> </div> </div>';
-            html += '<div class="col-sm-3"> <div class="form-group"> <label>Flight Number</label> <input type="text" class="form-control" id="f_number" name="f_number[]" placeholder="Enter Flight Number" required> </div> </div>';
-            html += '<div class="col-sm-3"> <div class="form-group"> <label>Airlines</label> <select class="form-control select2bs4" name="airline[]" id="'+airline+'" style="width: 100%;" required> <option value="">Select Airlines</option>';
-            <?php
-                foreach($airlines as $airline)
-                {
-                ?>
-                html += "<option value='<?php  echo $airline->name." (".$airline->code." )" ; ?>'> <?php echo $airline->name." (".$airline->code." )" ; ?></option>";
-            <?php
-                }
-                ?>
-                html += '</select></div></div>';
-            html += '<div class="col-sm-2"><label></label><div class="form-group" style="margin-top: 8px;"><button type="button" class="btn btn-warning btn-block removeFlight" id="removeFlight" value="1">Remove Flight</button></div></div>';
-            html += '</div>';
-            $('.after-add-more').append(html);
-            $('.select2bs4').select2({
-                theme: 'bootstrap4',
-            });
-            $('#'+d_time).datetimepicker({
-                format: 'YYYY-DD-MM hh:mm',
-                icons: { time: 'far fa-clock' }
-            });
-            $('#'+a_time).datetimepicker({
-                format: 'YYYY-DD-MM hh:mm',
-                icons: { time: 'far fa-clock' }
-            });
         });
         $(document).on('click', '#removeFlight', function () {
             var val = $('#ad_more').val();

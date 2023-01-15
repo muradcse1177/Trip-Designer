@@ -59,7 +59,7 @@
                                         <div class="form-group">
                                             <label>Issue date</label>
                                             <div class="input-group date" id="dob" data-target-input="nearest">
-                                                <input type="text" class="form-control datetimepicker-input" data-target="#dob" name="issue_date" placeholder="26-09-2027 3:15 PM" required/>
+                                                <input type="text" class="form-control datetimepicker-input" data-target="#dob" name="issue_date" placeholder="2027-02-09" required/>
                                                 <div class="input-group-append" data-target="#dob" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                 </div>
@@ -195,7 +195,7 @@
                                             <div class="form-group">
                                                 <label>Passenger Number</label>
                                                 <select class="form-control select2bs4" name="pax_number" id="pax_number" style="width: 100%;" required>
-                                                    <option value="">Select From</option>
+                                                    <option value="">Select Passenger Number</option>
                                                     <option value="1">One</option>
                                                     <option value="2">Two</option>
                                                     <option value="3">Three</option>
@@ -291,22 +291,69 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
+                                {{ Form::open(array('url' => 'filterAirTicket',  'method' => 'get' ,'class' =>'form-horizontal')) }}
+                                {{ csrf_field() }}
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>From Issue Date</label>
+                                            <div class="input-group date" id="from_issue_date" data-target-input="nearest">
+                                                <input type="text" class="form-control datetimepicker-input" data-target="#from_issue_date" name="from_issue_date" value="{{@$_GET['from_issue_date']}}" />
+                                                <div class="input-group-append" data-target="#from_issue_date" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>To Issue Date</label>
+                                            <div class="input-group date" id="to_issue_date" data-target-input="nearest">
+                                                <input type="text" class="form-control datetimepicker-input" data-target="#to_issue_date" name="to_issue_date" value="{{@$_GET['to_issue_date']}}" />
+                                                <div class="input-group-append" data-target="#to_issue_date" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>Current Status</label>
+                                            <select class="form-control" name="c_status" id="c_status" style="width: 100%;" >
+                                                <option value="">Select From</option>
+                                                <option value="Issued" @if(@$_GET['c_status'] == 'Issued') Selected @endif>Issued</option>
+                                                <option value="Reissued" @if(@$_GET['c_status'] == 'Reissued') Selected @endif>Reissued</option>
+                                                <option value="Refunded" @if(@$_GET['c_status'] == 'Refunded') Selected @endif>Refunded</option>
+                                                <option value="Cancelled" @if(@$_GET['c_status'] == 'Cancelled') Selected @endif>Cancelled</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>Payment Status</label>
+                                            <select class="form-control" name="p_status" id="p_status" style="width: 100%;" >
+                                                <option value="">Select Payment Status</option>
+                                                <option value="1" @if(@$_GET['p_status'] == '1') Selected @endif>Paid</option>
+                                                <option value="2" @if(@$_GET['p_status'] == '2') Selected @endif>Due</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12" align="right">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-warning float-right">Filter</button>
+                                        </div>
+                                    </div>
+                                </div><br>
+                                {{ Form::close() }}
                                 <table id="example11" class="table table-bordered table-hover">
                                     <thead>
                                     <tr>
                                         <th>S.L</th>
                                         <th>Booking Date</th>
-                                        <th>Issued By</th>
-                                        <th>R.PNR</th>
-                                        <th>A.PNR</th>
+                                        <th>Ticket Details</th>
+                                        <th>Passengers</th>
                                         <th>Status</th>
-                                        <th>Vendor</th>
-                                        <th>F.Type</th>
-                                        <th>A.Price</th>
-                                        <th>C.Price</th>
-                                        <th>VAT</th>
-                                        <th>AIT</th>
-                                        <th>P.Type</th>
+                                        <th>Price Details</th>
                                         <th>Due</th>
                                         <th>Action</th>
                                     </tr>
@@ -314,14 +361,36 @@
                                     <tbody>
                                     @php
                                         $i=1;
+                                        $j=1;
+                                        $sum_due = 0;
+                                        $sum_a_price = 0;
+                                        $sum_c_price = 0;
                                     @endphp
                                     @foreach($tickets as $ticket)
                                         <tr>
                                             <td>{{$i}}</td>
                                             <td>{{$ticket->issue_date}}</td>
-                                            <td>{{$ticket->issued_by}}</td>
-                                            <td>{{$ticket->reservation_pnr}}</td>
-                                            <td>{{$ticket->	airline_pnr}}</td>
+                                            <td>
+                                                <div>Reservation PNR: {{$ticket->reservation_pnr}} </div>
+                                                <div>Airlines PNR: {{$ticket->airline_pnr}} </div>
+                                            </td>
+                                                <?php
+                                                $p = json_decode($ticket->pax_name);
+                                                ?>
+                                            <td>
+                                                @foreach($p as $pas)
+                                                        <?php
+                                                        $name = DB::table('passengers')
+                                                            ->where('id',$pas)
+                                                            ->where('upload_by',Session::get('user_id'))
+                                                            ->first();
+                                                        ?>
+                                                    <div>{{$j.'.'.$name->f_name.' '.$name->l_name}}</div>
+                                                    @php
+                                                        $j++;
+                                                    @endphp
+                                                @endforeach
+                                            </td>
                                             <td>
                                                 @if($ticket->	status == 'Issued')
                                                     <button type="button" class="btn btn-success">{{$ticket->status}}</button>
@@ -336,18 +405,15 @@
                                                     <button type="button" class="btn btn-warning">{{$ticket->status}}</button>
                                                 @endif
                                             </td>
-                                            <td>{{$ticket->vendor}}</td>
-                                            <td>{{$ticket->	f_type}}</td>
-                                            <td>{{$ticket->	a_price}}</td>
-                                            <td>{{$ticket->	c_price}}</td>
-                                            <td>{{$ticket->	vat}}</td>
-                                            <td>{{$ticket->	ait}}</td>
-                                            <td>{{$ticket->	payment_type}}</td>
+                                            <td>
+                                                <div>A.Price: {{$ticket->	a_price}} /-</div>
+                                                <div>C.Price:  {{$ticket->	c_price + $ticket->	vat + $ticket->	ait}} /-</div>
+                                            </td>
                                             <td>
                                                 @if((int)$ticket->due_amount > 0)
-                                                    <button type="button" class="btn btn-danger">{{$ticket->due_amount}}</button>
+                                                    <div style="color: red;"><b>{{$ticket->due_amount}}/-</b></div>
                                                 @else
-                                                    {{$ticket->	due_amount}}
+                                                   {{$ticket->	due_amount.'/-'}}
                                                 @endif
                                             </td>
                                             <td>
@@ -367,9 +433,30 @@
                                         </tr>
                                         @php
                                             $i++;
+                                             $j = 1;
+                                             $sum_due = $sum_due + $ticket->due_amount;
+                                             $sum_a_price = $sum_a_price + $ticket->a_price;
+                                             $sum_c_price = $sum_c_price + $ticket->c_price + $ticket->vat + $ticket->ait;
                                         @endphp
                                     @endforeach
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th align="center"></th>
+                                            <th align="left"></th>
+                                            <th align="left"></th>
+                                            <th align="left"></th>
+                                            <th align="left">
+                                                <div>A.Price: {{$sum_a_price}} /-</div>
+                                                <div>C.Price:  {{$sum_c_price}} /-</div>
+                                            </th>
+                                            <th align="left">
+                                                <div style="color: red;"><b>{{$sum_due}} /-</b></div>
+                                            </th>
+                                            <th align="left"></th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                             <!-- /.card-body -->
@@ -411,12 +498,20 @@
             var id = $(this).data('id');
             $('.id').val(id);
         });
+        $("#from_issue_date,#to_issue_date").click(function(){
+            $('#from_issue_date,#to_issue_date').datetimepicker({
+                format: 'YYYY-MM-DD',
+                maxDate: new Date(),
+                icons: { time: 'far fa-clock' }
+            });
+        });
         $('#dob').datetimepicker({
-            format: 'YYYY-DD-MM HH:mm:ss',
+            format: 'YYYY-MM-DD',
+            maxDate: new Date(),
             icons: { time: 'far fa-clock' }
         });
         $('#d_time1,#a_time1').datetimepicker({
-            format: 'YYYY-DD-MM HH:mm:ss',
+            format: 'YYYY-MM-DD HH:mm',
             icons: { time: 'far fa-clock' }
         });
         $('#pax_number').on('change', function() {
@@ -498,11 +593,11 @@
                 theme: 'bootstrap4',
             });
             $('#'+d_time).datetimepicker({
-                format: 'YYYY-DD-MM hh:mm',
+                format: 'YYYY-MM-DD hh:mm',
                 icons: { time: 'far fa-clock' }
             });
             $('#'+a_time).datetimepicker({
-                format: 'YYYY-DD-MM hh:mm',
+                format: 'YYYY-MM-DD hh:mm',
                 icons: { time: 'far fa-clock' }
             });
         });
