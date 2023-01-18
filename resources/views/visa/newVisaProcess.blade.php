@@ -333,7 +333,8 @@
             $('.id').val(id);
         });
         $('#dob').datetimepicker({
-            format: 'YYYY-DD-MM',
+            format: 'YYYY-MM-DD',
+            maxDate: new Date(),
             icons: { time: 'far fa-clock' }
         });
         $('#d_time1,#a_time1').datetimepicker({

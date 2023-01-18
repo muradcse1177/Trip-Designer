@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/register', function () {
     return view('userAuth.register');
 });
+Route::get('importCsv', 'App\Http\Controllers\usersController@importCsv');
 Route::get('/', 'App\Http\Controllers\authController@loginPage');
 Route::get('login', 'App\Http\Controllers\authController@loginPage');
 Route::post('createNewUser', 'App\Http\Controllers\authController@createNewUser');
@@ -65,6 +66,7 @@ Route::middleware(['role'])->group(function () {
     Route::get('editBankAccount', 'App\Http\Controllers\accountsController@editBankAccount');
     Route::post('updateBankAccountsAmount', 'App\Http\Controllers\accountsController@updateBankAccountsAmount');
     Route::post('deleteBankAccount', 'App\Http\Controllers\accountsController@deleteBankAccount');
+    Route::get('filterTransaction', 'App\Http\Controllers\accountsController@filterTransaction');
     //----------------------------------------------------------
 
     //Settings Management------------------------------------------------

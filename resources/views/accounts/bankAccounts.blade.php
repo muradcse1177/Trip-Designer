@@ -52,7 +52,7 @@
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label>Amount</label>
-                                            <input type="number" class="form-control" id="amount" name="amount" placeholder="Enter Amount" min="1" required>
+                                            <input type="number" class="form-control" id="amount" name="amount" placeholder="Enter Amount" required>
                                         </div>
                                     </div>
                                 </div>
@@ -92,6 +92,7 @@
                                     <tbody>
                                     @php
                                         $i=1;
+                                        $sum=0;
                                     @endphp
                                     @foreach($accounts as $account)
                                         <tr>
@@ -113,12 +114,105 @@
                                         </tr>
                                         @php
                                             $i++;
+                                            $sum = $sum + $account->amount;
+                                        @endphp
+                                    @endforeach
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th>Total Amount</th>
+                                            <th align="right">{{$sum}}/-</th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                    </tbody>
+                                </table><br>
+                                <table id="example111" class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>S.L</th>
+                                        <th>Booking Date</th>
+                                        <th>Ticket Details</th>
+                                        <th>Passengers</th>
+                                        <th>Price Details</th>
+                                        <th>Due</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @php
+                                        $i=1;
+                                        $j=1;
+                                        $sum_due = 0;
+                                        $sum_a_price = 0;
+                                        $sum_c_price = 0;
+                                    @endphp
+                                    @foreach($tickets as $ticket)
+                                        <tr>
+                                            <td>{{$i}}</td>
+                                            <td>{{$ticket->issue_date}}</td>
+                                            <td>
+                                                <div>Reservation PNR: {{$ticket->reservation_pnr}} </div>
+                                                <div>Airlines PNR: {{$ticket->airline_pnr}} </div>
+                                            </td>
+                                                <?php
+                                                $p = json_decode($ticket->pax_name);
+                                                ?>
+                                            <td>
+                                                @foreach($p as $pas)
+                                                        <?php
+                                                        $name = DB::table('passengers')
+                                                            ->where('id',$pas)
+                                                            ->where('upload_by',Session::get('user_id'))
+                                                            ->first();
+                                                        ?>
+                                                    <div>{{$j.'.'.$name->f_name.' '.$name->l_name}}</div>
+                                                    @php
+                                                        $j++;
+                                                    @endphp
+                                                @endforeach
+                                            </td>
+                                            <td>
+                                                <div>A.Price: {{$ticket->	a_price}} /-</div>
+                                                <div>C.Price:  {{$ticket->	c_price + $ticket->	vat + $ticket->	ait}} /-</div>
+                                            </td>
+                                            <td>
+                                                @if((int)$ticket->due_amount > 0)
+                                                    <div style="color: red;"><b>{{$ticket->due_amount}}/-</b></div>
+                                                @else
+                                                    {{$ticket->	due_amount.'/-'}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @php
+                                            $i++;
+                                             $j = 1;
+                                             $sum_due = $sum_due + $ticket->due_amount;
+                                             $sum_a_price = $sum_a_price + $ticket->a_price;
+                                             $sum_c_price = $sum_c_price + $ticket->c_price + $ticket->vat + $ticket->ait;
                                         @endphp
                                     @endforeach
                                     </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th align="center"></th>
+                                        <th align="left"></th>
+                                        <th align="left"></th>
+                                        <th align="left">
+                                            <div>A.Price: {{$sum_a_price}} /-</div>
+                                            <div>C.Price:  {{$sum_c_price}} /-</div>
+                                        </th>
+                                        <th align="left">
+                                            <div style="color: red;"><b>{{$sum_due}} /-</b></div>
+                                        </th>
+                                    </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                             <!-- /.card-body -->
+                            <div class="card-header">
+                                <h3 class="card-title"><b >Total Amount in Hand :   {{$sum + $sum_due}}/- </b></h3>
+                            </div>
                         </div>
                         <!-- /.card -->
                     </div>

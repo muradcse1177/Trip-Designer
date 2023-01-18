@@ -221,11 +221,11 @@
                                         @endphp
                                     @endif
                                     @if(@$refund != 1 && @$reissue != 1 && @$cancel != 1 )
-                                    <div class="col-sm-12">
-                                        <div class="form-group" style="background: #e7e7e1;">
-                                            <label style="margin-left: 5px;">Passenger Details</label>
-                                        </div>
-                                    </div>
+{{--                                    <div class="col-sm-12">--}}
+{{--                                        <div class="form-group" style="background: #e7e7e1;">--}}
+{{--                                            <label style="margin-left: 5px;">Passenger Details</label>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
                                     @endif
                                     <div class="col-sm-12">
                                         <div class="form-group" style="background: #e7e7e1;">

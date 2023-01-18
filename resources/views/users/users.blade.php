@@ -174,20 +174,13 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <table id="example11" class="table table-bordered table-hover">
+                                <table id="passTable" class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
                                             <th>S.L</th>
-                                            <th>Name</th>
+                                            <th>Passengers </th>
                                             <th>Status</th>
-                                            <th>Phone</th>
-                                            <th>Email</th>
-                                            <th>Gender</th>
-                                            <th>Nationality</th>
-                                            <th>D.O.B</th>
-                                            <th>F.F.N</th>
-                                            <th>Passport</th>
-                                            <th>P.E.D</th>
+                                            <th>P. Details</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -198,7 +191,17 @@
                                     @foreach($passengers as $passenger)
                                         <tr>
                                             <td>{{$i}}</td>
-                                            <td>{{$passenger->title.' '.$passenger->f_name.' '.$passenger->l_name}}</td>
+                                            <td>
+                                                <div>
+                                                   Name:  {{$passenger->title.' '.$passenger->f_name.' '.$passenger->l_name}}
+                                                </div>
+                                               <div>
+                                                  Gender: {{$passenger->gender}}
+                                               </div>
+                                                <div>
+                                                    DOB: {{$passenger->dob}}
+                                                </div>
+                                            </td>
                                             <td>
                                                 @if($passenger->status == 'Active')
                                                     <div class="btn-group">
@@ -223,14 +226,17 @@
                                                     </div>
                                                 @endif
                                             </td>
-                                            <td>{{$passenger->phone}}</td>
-                                            <td>{{$passenger->email}}</td>
-                                            <td>{{$passenger->gender}}</td>
-                                            <td>{{$passenger->nationality}}</td>
-                                            <td>{{$passenger->dob}}</td>
-                                            <td>{{$passenger->ffn}}</td>
-                                            <td>{{$passenger->p_number}}</td>
-                                            <td>{{$passenger->p_exp_date}}</td>
+                                            <td>
+                                                <div>
+                                                    Phone: {{$passenger->phone}}
+                                                </div>
+                                                <div>
+                                                    Email: {{$passenger->email}}
+                                                </div>
+                                                <div>
+                                                    Pass. Number: {{$passenger->p_number}}
+                                                </div>
+                                            </td>
                                             <td>
                                                 <div class="btn-group">
                                                     <button type="button" class="btn btn-info">Action</button>
@@ -249,22 +255,6 @@
                                         @endphp
                                     @endforeach
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>S.L</th>
-                                            <th>Name</th>
-                                            <th>Phone</th>
-                                            <th>Email</th>
-                                            <th>Gender</th>
-                                            <th>Gender</th>
-                                            <th>Nationality</th>
-                                            <th>D.O.B</th>
-                                            <th>F.F.N</th>
-                                            <th>Passport</th>
-                                            <th>P.E.D</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </tfoot>
                                 </table>
                             </div>
                             <!-- /.card-body -->
@@ -319,6 +309,19 @@
             e.preventDefault();
             var id = $(this).data('id');
             $('.id').val(id);
+        });
+        $(function () {
+            $("#passTable").DataTable({
+                "pageLength": 50,
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": true,
+                "buttons": ["copy", "csv", "excel", "pdf", "print",],
+                "paging": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+            }).buttons().container().appendTo('#passTable_wrapper .col-md-6:eq(0)');
         });
     </script>
 @endsection

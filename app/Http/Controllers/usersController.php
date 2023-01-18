@@ -8,6 +8,35 @@ use Illuminate\Support\Facades\Session;
 
 class usersController extends Controller
 {
+    public function importCsv(){
+        $file = public_path('AAA.csv');
+        $csvData = file_get_contents($file);
+        $rows = array_map('str_getcsv', explode("\n", $csvData));
+        array_shift($rows);
+        //dd($rows[0][1]);
+        $data = [];
+        foreach ($rows as $row) {
+            $int= mt_rand(1262055681,1262055681);
+            $a = date("Y-m-d",$int);
+            $data[] = [
+                'title' => 'Mr',
+                'f_name' => @$row[1] ? $row[1] :'Example',
+                'l_name' => @$row[2]  ? $row[2] :'Example',
+                'gender' => 'Male',
+                'phone' => @$row[3],
+                'email' => @$row[4],
+                //'dob' => $a,
+                'nationality' => 'Bangladesh',
+                'p_number' => "",
+                't_type' => 'Adult',
+                //'p_exp_date' => '',
+                'upload_by' => 4,
+            ];
+        }
+        //dd($data);
+        DB::table('passengers')->insert($data);
+        return 'Jobi done or what ever';
+    }
     public function users(Request $request){
         try{
             $rows = DB::table('country')->get();

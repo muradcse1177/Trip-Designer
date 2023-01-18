@@ -402,10 +402,6 @@ class airTicketController extends Controller
                         $a_time = json_encode($request->a_time);
                         $f_number = json_encode($request->f_number);
                         $airlines = json_encode($request->airlines);
-                        $pax_number = $request->pax_number;
-                        $pax_name = json_encode($request->pax_name);
-                        $t_number = json_encode($request->t_number);
-                        $luggage = json_encode($request->luggage);
                         $a_price = $request->a_price;
                         $c_price = $request->c_price;
                         $vat = $request->vat;
@@ -429,10 +425,6 @@ class airTicketController extends Controller
                                 'a_time' => $a_time,
                                 'f_number' => $f_number,
                                 'airlines' => $airlines,
-                                'pax_number' => $pax_number,
-                                'pax_name' => $pax_name,
-                                't_number' => $t_number,
-                                'luggage' => $luggage,
                                 'a_price' => $a_price,
                                 'c_price' => $c_price,
                                 'vat' => $vat,
@@ -692,8 +684,10 @@ class airTicketController extends Controller
                 ->where('deleted',0)
                 ->where('agent_id',Session::get('user_id'))
                 ->where(function ($query) use($request) {
-                    if($request->from_issue_date  != '' and  $request->to_issue_date  != '')
-                        $query->whereBetween('issue_date', [$request->from_issue_date, $request->to_issue_date]);
+                    if($request->from_issue_date  != '')
+                        $query->where('date', '>=', $request->from_issue_date);
+                    if( $request->to_issue_date  != '')
+                        $query->where('date', '<=' , $request->to_issue_date);
                     if($request->c_status  != '' )
                         $query->where('status', '=', $request->c_status);
                     if($request->p_status  == '1' )

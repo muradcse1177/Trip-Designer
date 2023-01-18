@@ -71,7 +71,13 @@ class accountsController extends Controller
                 ->where('agent_id',Session::get('user_id'))
                 ->orderBy('id','desc')
                 ->get();
-            return view('accounts.bankAccounts',['accounts' => $rows1]);
+            $rows2 = DB::table('air_ticket_invoice')
+                ->where('deleted',0)
+                ->where('agent_id',Session::get('user_id'))
+                ->where('due_amount','>',0)
+                ->orderBy('id','desc')
+                ->get();
+            return view('accounts.bankAccounts',['accounts' => $rows1,'tickets' => $rows2]);
         }
         catch(\Illuminate\Database\QueryException $ex){
             return back()->with('errorMessage', $ex->getMessage());
@@ -136,6 +142,27 @@ class accountsController extends Controller
             } else {
                 return back()->with('errorMessage', 'Please try again!!');
             }
+        }
+        catch(\Illuminate\Database\QueryException $ex){
+            return back()->with('errorMessage', $ex->getMessage());
+        }
+    }
+    public function filterTransaction (Request $request){
+        try{
+            $rows1 = DB::table('accounts')
+                ->where('status','Approved')
+                ->where('agent_id',Session::get('user_id'))
+                ->where(function ($query) use($request) {
+                    if($request->from_issue_date  != '')
+                        $query->where('date', '>=', $request->from_issue_date);
+                    if( $request->to_issue_date  != '')
+                        $query->where('date', '<=' , $request->to_issue_date);
+                    if($request->acc_type  != '' )
+                        $query->where('source', '=', $request->acc_type);
+                })
+                ->orderBy('id','desc')
+                ->get();
+            return view('accounts.transactions',['transactions' => $rows1,]);
         }
         catch(\Illuminate\Database\QueryException $ex){
             return back()->with('errorMessage', $ex->getMessage());

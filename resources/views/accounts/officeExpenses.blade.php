@@ -95,7 +95,7 @@
 @section('js')
     <script>
         $('#dob').datetimepicker({
-            format: 'YYYY-DD-MM',
+            format: 'YYYY-MM-DD',
         });
         $(document).on('click', '.delete', function(e){
             e.preventDefault();
