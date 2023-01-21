@@ -103,7 +103,7 @@ class airTicketController extends Controller
                     $result1 = DB::table('accounts')->insert([
                         'agent_id' => Session::get('user_id'),
                         'invoice_id' =>$id,
-                        'date' => date('Y-m-d'),
+                        'date' => $issue_date,
                         'transaction_type' => 'Debit',
                         'source' => 'Air Ticket',
                         'purpose' => 'Air Ticket'.'---'.$reservation_pnr.'---'.$airline_pnr,
@@ -685,9 +685,9 @@ class airTicketController extends Controller
                 ->where('agent_id',Session::get('user_id'))
                 ->where(function ($query) use($request) {
                     if($request->from_issue_date  != '')
-                        $query->where('date', '>=', $request->from_issue_date);
+                        $query->where('issue_date', '>=', $request->from_issue_date);
                     if( $request->to_issue_date  != '')
-                        $query->where('date', '<=' , $request->to_issue_date);
+                        $query->where('issue_date', '<=' , $request->to_issue_date);
                     if($request->c_status  != '' )
                         $query->where('status', '=', $request->c_status);
                     if($request->p_status  == '1' )

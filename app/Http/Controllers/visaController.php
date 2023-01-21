@@ -64,7 +64,7 @@ class visaController extends Controller
                 $result1 = DB::table('accounts')->insert([
                     'agent_id' => Session::get('user_id'),
                     'invoice_id' =>$id,
-                    'date' => date('Y-m-d'),
+                    'date' => $request->date,
                     'transaction_type' => 'Debit',
                     'source' => 'Visa',
                     'purpose' => 'Visa Processing'.'---'.$request->c_name,

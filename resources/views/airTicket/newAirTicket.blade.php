@@ -520,7 +520,7 @@
             var html= '<div class="row feedback">';
             for(var i=0; i<pax_value; i++){
                 var pax_name = 'pax_name'+i;
-                html += '<div class="col-md-6"> <div class="form-group"> <label>Passengers</label> <select class="form-control select2bs4" name="pax_name[]" id="'+pax_name+'" style="width: 100%;" required> <option value="">Select Passenger Name</option>';
+                html += '<div class="col-md-4"> <div class="form-group"> <label>Passengers</label> <select class="form-control select2bs4" name="pax_name[]" id="'+pax_name+'" style="width: 100%;" required> <option value="">Select Passenger Name</option>';
                 <?php
                 foreach($passengers as $passenger)
                 {

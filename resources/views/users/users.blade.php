@@ -98,6 +98,7 @@
                                                         <option value="">Select Nationality</option>
                                                         @foreach($countries as $country)
                                                             <option value="{{$country->name}}">{{$country->name.'('.$country->code.')'}}</option>
+                                                            <option value="{{$country->name}}" @if($country->name == 'Bangladesh') {{'Selected'}} @endif>{{$country->name.'('.$country->code.')'}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
